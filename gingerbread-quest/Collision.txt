@@ -1,0 +1,58 @@
+    #Establishes gaps and velocities.
+    original_vel=vel
+    pivot_gap=b_pivot-a_pivot
+    if vel.magnitude()>0:
+      #p is the axis perpendicular to the combined velocity.
+      p=Vector([[-vel[0][1], vel[0][0]]])
+    else:
+      #In case velocity is 0, still needs a collision check.
+      vel=pivot_gap
+      p=Vector([[-vel[0][1], vel[0][0]]])
+    #Finds the forward hulls
+    min_a, max_a, step_a = a.find_forward_hull_points(p)
+    min_b, max_b, step_b = b.find_forward_hull_points(p)
+    len_a, len_b = len(a), len(b)
+    angle=pivot_gap.angle(Vector([[1, 0]]))
+    #Using an angle, finds if a is ahead or behind b.
+    #If the angle is positive, a heads towards b.
+    if angle>=0:
+      direction=1
+      min_b, max_b=max_b, min_b
+    elif angle<0:
+      min_a, max_a=max_a, min_a
+      direction=-1
+    print(direction)
+    #print("a - ",a, "\np - ",p)
+    #Goes through the forward hull of b and compares to current_a_set to find intersections.
+    current_a_set=min_a
+    number_of_sets=abs(max_a-min_a)
+    intersect=a.getc(current_a_set).proj(p).proj(b.getc(min_b))
+    smallest=intersect
+    biggest=intersect
+    for i in range(min_b, max_b):
+      #While a is within the same points of b, checks are carried out.
+      while a.getc(current_a_set%len_a).projscalar(p)<b.getc(i%len_b).projscalar(p):
+        intersect=a.getc(current_a_set%len_a).proj(p).proj(b.getc(i%len_b))
+        gap=(intersect-a.getc(current_a_set%len_a))
+        if gap.magnitude()<smallest.magnitude():
+          smallest=gap
+        if gap.magnitude()>biggest.magnitude() and gap.projscalar(vel)>0:
+          biggest=gap
+        if current_a_set<number_of_sets:
+          current_a_set+=1
+        else:
+          break
+    #If the biggest gap is over 1, there WILL BE a collision.
+    #If the smallest gap is negative, there is ALREADY a collision.
+    #cond_1=(smallest.projscalar(vel)<=1 and smallest.magnitude()>vel.magnitude())
+    #big=vel.projscalar(biggest)
+    #small=vel.projscalar(smallest)
+    #If the biggest gap 
+    #if biggest.projscalar(pivot_gap)<0:
+      #print("1\nbiggest - ",biggest,"\nvel - ",vel,"\nsmallest - ",smallest)
+    #  return [False]
+    if smallest.projscalar(pivot_gap)<0:
+      print("2\nbiggest - ",biggest,"\nvel - ",vel,"\nsmallest - ",smallest,"\npivot gap - ",pivot_gap)
+      return [True, smallest]
+    else:
+      return [False]

@@ -1,0 +1,31 @@
+  def collision(self, b, vel):
+    l_self, l_b = len(self), len(b)
+    for i in range(l_self):
+      p1=self[i]
+      p2=self[i]+vel
+      for j in range(l_b):
+        l1=b[j]
+        l2=b[(j+1)%l_b]
+        l3=l1+vel
+        l4=l2+vel
+        a=(l3[0][1]+l2[0][1]-l1[0][1]-l4[0][1])*(p2[0][0]+l2[0][0]-p1[0][0]-l4[0][0])
+        a-=(p2[0][1]+l2[0][1]-p1[0][1]-l4[0][1])*(l3[0][0]+l2[0][0]-l1[0][0]-l4[0][0])
+        b=(l1[0][1]-l2[0][1])*(p2[0][0]+l2[0][0]-p1[0][0]+l4[0][0])
+        b+=(p1[0][0]-l2[0][0])*(l3[0][1]+l2[0][1]-l1[0][1]-l4[0][1])
+        b-=(p1[0][1]-l2[0][1])*(l3[0][0]+l2[0][0]-l1[0][0]-l4[0][0])
+        b-=(l1[0][0]-l2[0][0])*(p2[0][1]+l2[0][1]-p1[0][1]-l4[0][1])
+        c=(l1[0][1]-l2[0][1])*(p1[0][0]-l2[0][0])-(p1[0][1]-l2[0][1])*(l1[0][0]-l2[0][0])
+        t11=(-b+sqrt((b**2)-4*a*c))/2*a
+        t12=(-b-sqrt((b**2)-4*a*c))/2*a
+        point_collision=[False]
+        if t11>=0 and t11<=1:
+          if t11<=t12:
+            point_collision=[True, t11]
+          else:
+            if t12<=1:
+              point_collision=[True, t12]
+            else:
+              point_collision=[False]
+        else:
+          if t12>=0 and t12<=1:
+            point_collision=[True, t12]
