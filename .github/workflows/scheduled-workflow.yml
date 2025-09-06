@@ -1,0 +1,12 @@
+name: scheduled-workflow
+
+on:
+  schedule:
+    - cron: '0 0 * * SUN' #Every Sunday at midnight. Need to find out more, but this temporary example will do for now.
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for outdated dependencies
+        run: |
+          pip list --outdated
