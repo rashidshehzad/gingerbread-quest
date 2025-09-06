@@ -1,0 +1,25 @@
+name: gingerbread-quest-development-workflow
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.14'
+    - name: Install pip and pythong dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    #- name:
+    #  run: |
+    #    pytest
+    
